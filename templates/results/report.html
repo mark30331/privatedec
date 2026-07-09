@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Report {{ session.original_filename }} | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Processing report</h1>
+        <p class="text-secondary mb-0">{{ session.original_filename }}</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge text-bg-{{ status_badge_class }}">{{ session.get_status_display }}</span>
+        <a class="btn btn-outline-secondary" href="{% url 'results:detail' session.pk %}">Back</a>
+        {% if session.status == "COMPLETED" and can_download %}
+        <a class="btn btn-primary" href="{% url 'results:download' session.pk %}">Download CSV</a>
+        {% endif %}
+        <button type="button" class="btn btn-outline-primary" onclick="window.print()">Print</button>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Summary</h2>
+                <dl class="row mb-0">
+                    <dt class="col-6">Generated</dt>
+                    <dd class="col-6">{{ generated_at }}</dd>
+                    <dt class="col-6">Rows</dt>
+                    <dd class="col-6">{{ session.row_count }}</dd>
+                    <dt class="col-6">Columns</dt>
+                    <dd class="col-6">{{ session.column_count }}</dd>
+                    <dt class="col-6">Encoding</dt>
+                    <dd class="col-6">{{ session.encoding|default:"-" }}</dd>
+                    <dt class="col-6">Delimiter</dt>
+                    <dd class="col-6">{{ session.delimiter|default:"," }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Parameters</h2>
+                <dl class="row mb-0">
+                    <dt class="col-6">k-anonymity</dt>
+                    <dd class="col-6">{{ session.anonymization_run.k_value }}</dd>
+                    <dt class="col-6">l-diversity</dt>
+                    <dd class="col-6">{{ session.anonymization_run.l_value }}</dd>
+                    <dt class="col-6">t-closeness</dt>
+                    <dd class="col-6">{{ session.anonymization_run.t_value }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Outcome</h2>
+                <dl class="row mb-0">
+                    <dt class="col-7">Engine</dt>
+                    <dd class="col-5">{{ session.anonymization_run.engine_name }}</dd>
+                    <dt class="col-7">Rows processed</dt>
+                    <dd class="col-5">{{ session.anonymization_run.rows_processed }}</dd>
+                    <dt class="col-7">Time</dt>
+                    <dd class="col-5">{{ session.anonymization_run.processing_time_ms }} ms</dd>
+                    <dt class="col-7">Privacy score</dt>
+                    <dd class="col-5">{{ session.anonymization_run.privacy_score|default:"-" }}</dd>
+                </dl>
+                {% if session.status == "FAILED" %}
+                <div class="alert alert-danger mt-3 mb-0">{{ session.error_message|default:"Processing failed for this session." }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Retention</h2>
+                <div class="text-secondary small mb-2">Original expires: {{ original_expires_at }}{% if original_expired %} (expired){% endif %}</div>
+                <div class="text-secondary small">Result expires: {{ result_expires_at }}{% if result_expired %} (expired){% endif %}</div>
+                <div class="text-secondary small mt-2">
+                    Policy: <a href="{% url 'core:retention' %}">Retention & Deletion</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Selections</h2>
+                <p class="mb-2"><strong>Quasi-identifiers:</strong> {{ session.schema.quasi_identifier_columns_json|join:", " }}</p>
+                <p class="mb-0"><strong>Sensitive attributes:</strong> {{ session.schema.sensitive_columns_json|join:", " }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Result preview</h2>
+                {% if result_preview %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                {% for column in result_columns %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in result_preview_table %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-secondary mb-0">Preview is available after successful processing and while the result is retained.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Important notes</h2>
+                <ul class="mb-0">
+                    <li>This report is an evidence artifact intended to support reproducible privacy processing.</li>
+                    <li>De-identification is risk reduction and cannot be guaranteed to be irreversible in all contexts.</li>
+                    <li>For healthcare data, confirm alignment with your institution’s policies and approvals.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,8 @@
+Hello {{ user.full_name }},
+
+Welcome to {{ site_name }}.
+
+Activate your account by opening the link below:
+{{ verification_url }}
+
+If you did not create this account, you can safely ignore this message.

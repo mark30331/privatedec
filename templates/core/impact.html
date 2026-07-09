@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Impact | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">Impact</h1>
+                <p class="text-secondary mb-0">
+                    Evidence-style metrics to demonstrate real-world privacy-preserving data preparation.
+                </p>
+            </div>
+            <div class="text-secondary small">As of {{ as_of }}</div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-secondary small">Datasets processed (sessions)</div>
+                        <div class="display-6 fw-semibold">{{ total_sessions }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-secondary small">Rows uploaded (total)</div>
+                        <div class="display-6 fw-semibold">{{ total_rows_uploaded }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-secondary small">Completed anonymization runs</div>
+                        <div class="display-6 fw-semibold">{{ completed_runs }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5">Why this matters for healthcare research</h2>
+                        <ul class="mb-0">
+                            <li>Reduces friction for sharing datasets across research collaborators.</li>
+                            <li>Promotes data minimization and retention limits for sensitive data.</li>
+                            <li>Provides reproducible parameterization and audit-friendly outcomes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body p-4">
+                        <h2 class="h5">Operational indicators</h2>
+                        <dl class="row mb-0">
+                            <dt class="col-7">Failed runs</dt>
+                            <dd class="col-5">{{ failed_runs }}</dd>
+                            <dt class="col-7">Results generated</dt>
+                            <dd class="col-5">{{ downloads }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

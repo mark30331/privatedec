@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Privacy Policy</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    This policy explains what {{ SITE_NAME }} stores and how we handle datasets and metadata. This is a product transparency statement and not legal advice.
+                </p>
+
+                <h2 class="h5 mt-4">Data We Store</h2>
+                <ul class="mb-0">
+                    <li>Account data: email and profile fields you provide.</li>
+                    <li>Session metadata: filename, row/column counts, selected parameters (k/l/t), and processing outcomes.</li>
+                    <li>Uploaded datasets and processed outputs (depending on retention settings and your actions).</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Storage & Access</h2>
+                <ul class="mb-0">
+                    <li>Files are stored using the configured object storage backend (for example Cloudflare R2 when enabled).</li>
+                    <li>Downloads may use time-limited signed URLs when supported by the storage backend.</li>
+                    <li>Access to sessions is restricted to the authenticated user account that created them.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Retention</h2>
+                <p class="mb-2">
+                    By default, retention is designed to minimize long-term storage of sensitive datasets:
+                </p>
+                <ul class="mb-0">
+                    <li>Original uploads: {{ ORIGINAL_RETENTION_DAYS }} days.</li>
+                    <li>Anonymized results: {{ RESULT_RETENTION_DAYS }} days.</li>
+                    <li>Session records (metadata): up to {{ SESSION_RETENTION_DAYS }} days.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Deletion</h2>
+                <p class="mb-0">
+                    You can delete sessions from the app. Deletion attempts to remove associated objects from storage as well as the database record.
+                </p>
+
+                <h2 class="h5 mt-4">Analytics</h2>
+                <p class="mb-0">
+                    Analytics may be enabled to understand product usage and improve reliability. If enabled, analytics identifiers and settings are configured by the deployment owner.
+                </p>
+
+                <h2 class="h5 mt-4">Contact</h2>
+                <p class="mb-0">
+                    Privacy questions: <a href="mailto:{{ SITE_CONTACT_EMAIL }}">{{ SITE_CONTACT_EMAIL }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

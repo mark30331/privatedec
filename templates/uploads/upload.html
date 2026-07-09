@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Upload CSV | Privatedec{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Upload a CSV dataset</h1>
+                <p class="text-secondary">
+                    This step validates the file, previews the first five rows, detects columns,
+                    and stores the dataset as an upload session ready for anonymization.
+                </p>
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Validate And Save Session</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Validation rules</h2>
+                <ul class="text-secondary mb-0">
+                    <li>CSV format only</li>
+                    <li>Maximum size: 50 MB</li>
+                    <li>UTF-8 encoded content</li>
+                    <li>k must not exceed the number of rows</li>
+                    <li>Small datasets may need a higher t-closeness (for example 0.4–0.7)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Recent sessions</h2>
+                {% if recent_sessions %}
+                <div class="list-group list-group-flush">
+                    {% for session in recent_sessions %}
+                    <a class="list-group-item list-group-item-action px-0" href="{% url 'uploads:detail' session.pk %}">
+                        <div class="fw-semibold">{{ session.original_filename }}</div>
+                        <div class="small text-secondary">{{ session.row_count }} rows · {{ session.column_count }} columns</div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-secondary mb-0">No upload sessions yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

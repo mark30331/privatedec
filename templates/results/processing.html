@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Processing {{ session.original_filename }} | Privatedec{% endblock %}
+
+{% block content %}
+<div
+    class="row justify-content-center"
+    id="processingPage"
+    data-status-url="{% url 'results:status' session.pk %}"
+    data-initial-status="{{ session.status }}"
+    data-initial-progress="{{ session.progress_percent }}"
+>
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h1 class="h3 mb-1">Processing session</h1>
+                        <p class="text-secondary mb-0">{{ session.original_filename }}</p>
+                    </div>
+                    <span id="statusBadge" class="badge text-bg-{{ status_badge_class }}">{{ session.get_status_display }}</span>
+                </div>
+
+                <div class="progress mb-3" role="progressbar" aria-label="Processing progress">
+                    <div
+                        id="progressBar"
+                        class="progress-bar progress-bar-striped progress-bar-animated"
+                        style="width: 0%;"
+                    >
+                        {{ session.progress_percent }}%
+                    </div>
+                </div>
+
+                <p id="statusText" class="mb-1">
+                    {% if session.status == "COMPLETED" %}
+                    Processing completed successfully.
+                    {% elif session.status == "FAILED" %}
+                    Processing failed.
+                    {% else %}
+                    Your anonymization job is running in the background.
+                    {% endif %}
+                </p>
+                <p id="errorText" class="text-danger mb-4">
+                    {% if session.error_message %}{{ session.error_message }}{% endif %}
+                </p>
+
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-secondary" href="{% url 'uploads:detail' session.pk %}">Back To Session</a>
+                    <a id="resultButton" class="btn btn-primary {% if session.status != 'COMPLETED' %}d-none{% endif %}" href="{% url 'results:detail' session.pk %}">
+                        View Result
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const processingPage = document.getElementById("processingPage");
+        const statusUrl = processingPage.dataset.statusUrl;
+        const initialStatus = processingPage.dataset.initialStatus;
+        const initialProgress = Number(processingPage.dataset.initialProgress || "0");
+        const progressBar = document.getElementById("progressBar");
+        const statusBadge = document.getElementById("statusBadge");
+        const statusText = document.getElementById("statusText");
+        const errorText = document.getElementById("errorText");
+        const resultButton = document.getElementById("resultButton");
+
+        progressBar.style.width = initialProgress + "%";
+        progressBar.textContent = initialProgress + "%";
+
+        if (initialStatus === "COMPLETED" || initialStatus === "FAILED") {
+            progressBar.classList.remove("progress-bar-animated");
+        }
+
+        const setBadgeClass = (badgeClass) => {
+            statusBadge.className = "badge text-bg-" + badgeClass;
+        };
+
+        const poll = async () => {
+            try {
+                const response = await fetch(statusUrl, {headers: {"X-Requested-With": "XMLHttpRequest"}});
+                const data = await response.json();
+                progressBar.style.width = data.progress_percent + "%";
+                progressBar.textContent = data.progress_percent + "%";
+                statusBadge.textContent = data.status;
+                setBadgeClass(data.status_badge_class);
+                errorText.textContent = data.error_message || "";
+
+                if (data.status === "COMPLETED") {
+                    progressBar.classList.remove("progress-bar-animated");
+                    statusText.textContent = "Processing completed successfully.";
+                    resultButton.classList.remove("d-none");
+                    window.location.href = data.result_url;
+                    return;
+                }
+
+                if (data.status === "FAILED") {
+                    progressBar.classList.remove("progress-bar-animated");
+                    statusText.textContent = "Processing failed.";
+                    return;
+                }
+
+                window.setTimeout(poll, 1500);
+            } catch (error) {
+                statusText.textContent = "Unable to refresh processing status automatically.";
+            }
+        };
+
+        if (initialStatus !== "COMPLETED" && initialStatus !== "FAILED") {
+            window.setTimeout(poll, 1500);
+        }
+    })();
+</script>
+{% endblock %}

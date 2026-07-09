@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}AI & Model Training Disclaimer | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">AI & Model Training Disclaimer</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    {{ SITE_NAME }} can be used as part of a workflow to prepare datasets for analytics or machine learning. This page is informational and not legal advice.
+                </p>
+
+                <h2 class="h5 mt-4">Risk Reduction, Not Risk Elimination</h2>
+                <p class="mb-0">
+                    Techniques such as generalization, suppression, and distribution checks can reduce re-identification risk. They do not guarantee that membership inference, linkage attacks, or re-identification are impossible, especially when combined with external data.
+                </p>
+
+                <h2 class="h5 mt-4">Model Training Considerations</h2>
+                <ul class="mb-0">
+                    <li>Review outputs for unique or rare combinations that could identify individuals.</li>
+                    <li>Ensure that downstream training and evaluation follow your institution’s governance requirements.</li>
+                    <li>Consider additional safeguards such as access controls, dataset licensing, and (where appropriate) privacy-preserving ML methods.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Contact</h2>
+                <p class="mb-0">
+                    Questions: <a href="mailto:{{ SITE_CONTACT_EMAIL }}">{{ SITE_CONTACT_EMAIL }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

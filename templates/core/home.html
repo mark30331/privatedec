@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Privatedec | Privacy-Preserving CSV Anonymization{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="badge text-bg-primary mb-3">Django MVP Foundation</span>
+            <h1 class="display-5 fw-semibold">Upload CSV files and prepare them for privacy-safe sharing.</h1>
+            <p class="lead text-secondary">
+                Privatedec is a privacy-preserving workflow for dataset upload, anonymization,
+                async processing, and secure result delivery.
+            </p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                {% if request.user.is_authenticated %}
+                <a class="btn btn-primary btn-lg" href="{% url 'core:dashboard' %}">Open Dashboard</a>
+                {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'accounts:register' %}">Create Account</a>
+                <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:login' %}">Sign In</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5">Planned MVP Features</h2>
+                    <ul class="mb-0 text-secondary">
+                        <li>Email-based authentication</li>
+                        <li>CSV validation and preview</li>
+                        <li>Cloudflare R2 storage</li>
+                        <li>Celery + Redis processing</li>
+                        <li>Secure download workflow</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

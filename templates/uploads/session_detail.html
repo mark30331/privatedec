@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}{{ session.original_filename }} | Privatedec{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">{{ session.original_filename }}</h1>
+        <p class="text-secondary mb-0">
+            {{ session.row_count }} rows · {{ session.column_count }} columns · {{ session.encoding }} · delimiter "{{ session.delimiter }}"
+        </p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge text-bg-{{ status_badge_class }}">{{ session.get_status_display }}</span>
+        {% if session.status == "READY" or session.status == "FAILED" %}
+        <form method="post" action="{% url 'results:start' session.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Start Processing</button>
+        </form>
+        {% if session.status == "FAILED" and "t-closeness" in session.error_message %}
+        <form method="post" action="{% url 'results:retry_t' session.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-primary">Retry (Increase t)</button>
+        </form>
+        {% endif %}
+        {% elif session.status == "PENDING" or session.status == "PROCESSING" %}
+        <a class="btn btn-outline-primary" href="{% url 'results:processing' session.pk %}">View Processing</a>
+        {% elif session.status == "COMPLETED" %}
+        <a class="btn btn-primary" href="{% url 'results:detail' session.pk %}">View Result</a>
+        {% endif %}
+        <form method="post" action="{% url 'results:delete' session.pk %}" onsubmit="return confirm('Delete this session and its files?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Privacy parameters</h2>
+                <dl class="row mb-0">
+                    <dt class="col-6">k-anonymity</dt>
+                    <dd class="col-6">{{ session.anonymization_run.k_value }}</dd>
+                    <dt class="col-6">l-diversity</dt>
+                    <dd class="col-6">{{ session.anonymization_run.l_value }}</dd>
+                    <dt class="col-6">t-closeness</dt>
+                    <dd class="col-6">{{ session.anonymization_run.t_value }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Column selection</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if selection_form.non_field_errors %}
+                    <div class="alert alert-danger">{{ selection_form.non_field_errors }}</div>
+                    {% endif %}
+                    {% for field in selection_form %}
+                    <div class="mb-3">
+                        <label class="form-label d-block">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Save Column Choices</button>
+                </form>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Retention</h2>
+                <dl class="row mb-0">
+                    <dt class="col-6">Original upload</dt>
+                    <dd class="col-6">
+                        {{ original_expires_at }}
+                        {% if original_expired %}
+                        <span class="badge text-bg-warning ms-1">Expired</span>
+                        {% endif %}
+                    </dd>
+                    <dt class="col-6">Anonymized result</dt>
+                    <dd class="col-6">
+                        {{ result_expires_at }}
+                        {% if result_expired %}
+                        <span class="badge text-bg-warning ms-1">Expired</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+                <div class="text-secondary small mt-2">
+                    Retention defaults are described on the <a href="{% url 'core:retention' %}">Retention</a> page.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Detected columns</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Detected type</th>
+                                <th>Unique values</th>
+                                <th>Sample/min</th>
+                                <th>Sample/max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for column in column_summaries %}
+                            <tr>
+                                <td>{{ column.name }}</td>
+                                <td>{{ column.detected_type }}</td>
+                                <td>{{ column.unique_count }}</td>
+                                <td>{{ column.min_display }}</td>
+                                <td>{{ column.max_display }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Preview rows</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                {% for column in session.schema.detected_columns_json %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in preview_table %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

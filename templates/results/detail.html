@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Result {{ session.original_filename }} | Privatedec{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Anonymized result</h1>
+        <p class="text-secondary mb-0">{{ session.original_filename }}</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge text-bg-{{ status_badge_class }}">{{ session.get_status_display }}</span>
+        <a class="btn btn-outline-primary" href="{% url 'results:report' session.pk %}">View Report</a>
+        {% if session.status == "COMPLETED" and can_download %}
+        <a class="btn btn-primary" href="{% url 'results:download' session.pk %}">Download CSV</a>
+        {% endif %}
+        <form method="post" action="{% url 'results:delete' session.pk %}" onsubmit="return confirm('Delete this session and its files?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+        </form>
+    </div>
+</div>
+
+{% if session.status == "FAILED" %}
+<div class="alert alert-danger">{{ session.error_message|default:"Processing failed for this session." }}</div>
+{% elif session.status == "COMPLETED" and not can_download %}
+<div class="alert alert-warning">
+    The anonymized result file is no longer available. It may have been deleted due to the retention policy.
+</div>
+{% elif session.status != "COMPLETED" %}
+<div class="alert alert-info">
+    This session is not complete yet. <a href="{% url 'results:processing' session.pk %}">View processing status</a>.
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Processing metrics</h2>
+                <dl class="row mb-0">
+                    <dt class="col-7">Rows processed</dt>
+                    <dd class="col-5">{{ session.anonymization_run.rows_processed }}</dd>
+                    <dt class="col-7">Processing time</dt>
+                    <dd class="col-5">{{ session.anonymization_run.processing_time_ms }} ms</dd>
+                    <dt class="col-7">Privacy score</dt>
+                    <dd class="col-5">{{ session.anonymization_run.privacy_score|default:"-" }}</dd>
+                    <dt class="col-7">Engine</dt>
+                    <dd class="col-5">{{ session.anonymization_run.engine_name }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5">Selections</h2>
+                <p class="mb-2"><strong>Quasi-identifiers:</strong> {{ session.schema.quasi_identifier_columns_json|join:", " }}</p>
+                <p class="mb-0"><strong>Sensitive attributes:</strong> {{ session.schema.sensitive_columns_json|join:", " }}</p>
+                <hr class="my-3">
+                <div class="text-secondary small">
+                    Result retention until: {{ result_expires_at }}
+                    {% if result_expired %}
+                    <span class="badge text-bg-warning ms-1">Expired</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h2 class="h5">Result preview</h2>
+                {% if result_preview %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                {% for column in result_columns %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in result_preview_table %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-secondary mb-0">The anonymized preview will appear here when processing completes.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

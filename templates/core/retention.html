@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Data Retention | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Data Retention & Deletion</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    {{ SITE_NAME }} is designed with data minimization in mind. Retention defaults can be adjusted by the deployment owner.
+                </p>
+
+                <h2 class="h5 mt-4">Default Retention</h2>
+                <ul class="mb-0">
+                    <li><strong>Original uploads:</strong> {{ ORIGINAL_RETENTION_DAYS }} days (typical default for sensitive healthcare workflows).</li>
+                    <li><strong>Anonymized results:</strong> {{ RESULT_RETENTION_DAYS }} days.</li>
+                    <li><strong>Session metadata:</strong> up to {{ SESSION_RETENTION_DAYS }} days.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">User-Controlled Deletion</h2>
+                <ul class="mb-0">
+                    <li>You can delete a session at any time from the session or results pages.</li>
+                    <li>Deletion attempts to remove stored objects (original and result) and then remove the database record.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">What Happens When Data Expires</h2>
+                <ul class="mb-0">
+                    <li>Original files may be removed after the original retention window ends.</li>
+                    <li>Anonymized result files may be removed after the result retention window ends.</li>
+                    <li>When files expire, the application may continue to retain limited session metadata for audit and reporting purposes.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

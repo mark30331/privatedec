@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Terms of Service</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    These Terms govern access to and use of {{ SITE_NAME }}. By using the service, you agree to these Terms.
+                </p>
+
+                <h2 class="h5 mt-4">Intended Use</h2>
+                <ul class="mb-0">
+                    <li>{{ SITE_NAME }} is intended to support privacy-preserving preparation of datasets for research, analytics, and responsible data sharing.</li>
+                    <li>{{ SITE_NAME }} is not a substitute for institutional compliance programs, legal counsel, or IRB review.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">User Responsibilities</h2>
+                <ul class="mb-0">
+                    <li>You are responsible for confirming that you have the right to upload and process the data you provide.</li>
+                    <li>You must comply with applicable laws and policies, including healthcare privacy obligations where relevant.</li>
+                    <li>You are responsible for selecting appropriate parameters and reviewing outputs before sharing or using them.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Prohibited Use</h2>
+                <ul class="mb-0">
+                    <li>Attempting to re-identify individuals from processed outputs.</li>
+                    <li>Uploading data for which you do not have authorization or legal basis to process.</li>
+                    <li>Using the service for unlawful, abusive, or harmful purposes.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">No Warranties</h2>
+                <p class="mb-0">
+                    The service is provided “as is” and “as available”. De-identification and anonymization are risk-reduction techniques and cannot be guaranteed to be irreversible.
+                </p>
+
+                <h2 class="h5 mt-4">Limitation of Liability</h2>
+                <p class="mb-0">
+                    To the maximum extent permitted by law, {{ SITE_NAME }} will not be liable for indirect, incidental, special, or consequential damages arising from use of the service.
+                </p>
+
+                <h2 class="h5 mt-4">Contact</h2>
+                <p class="mb-0">
+                    Questions about these Terms: <a href="mailto:{{ SITE_CONTACT_EMAIL }}">{{ SITE_CONTACT_EMAIL }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

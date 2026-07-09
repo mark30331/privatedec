@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Healthcare Disclaimer | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Healthcare Disclaimer</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    {{ SITE_NAME }} provides tools to reduce privacy risk in datasets used for research, analytics, and AI development. This page is informational and not legal advice.
+                </p>
+
+                <h2 class="h5 mt-4">No Compliance Guarantee</h2>
+                <p class="mb-0">
+                    Outputs are produced using configurable privacy techniques (for example k-anonymity, l-diversity, and t-closeness). These techniques reduce risk but cannot guarantee that data is fully anonymous or that it meets all legal definitions of “de-identified” in every context.
+                </p>
+
+                <h2 class="h5 mt-4">User Responsibilities</h2>
+                <ul class="mb-0">
+                    <li>Confirm that you have authorization to process the data you upload, including any patient or clinical data.</li>
+                    <li>Follow your institution’s policies (IRB, data use agreements, access controls, and approvals).</li>
+                    <li>Validate whether outputs are appropriate for the intended use, including downstream sharing or model training.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Not Medical Advice</h2>
+                <p class="mb-0">
+                    {{ SITE_NAME }} does not provide medical advice and is not intended for clinical decision-making.
+                </p>
+
+                <h2 class="h5 mt-4">Contact</h2>
+                <p class="mb-0">
+                    Questions: <a href="mailto:{{ SITE_CONTACT_EMAIL }}">{{ SITE_CONTACT_EMAIL }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

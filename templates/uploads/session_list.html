@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Sessions | Privatedec{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Upload sessions</h1>
+        <p class="text-secondary mb-0">Browse the CSV files you have already prepared.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'uploads:create' %}">New Upload</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        {% if sessions %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Filename</th>
+                        <th>Status</th>
+                        <th>Rows</th>
+                        <th>Columns</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in sessions %}
+                    <tr>
+                        <td>{{ session.original_filename }}</td>
+                        <td>
+                            <span class="badge {% if session.status == 'COMPLETED' %}text-bg-success{% elif session.status == 'PROCESSING' or session.status == 'PENDING' %}text-bg-info{% elif session.status == 'FAILED' %}text-bg-danger{% else %}text-bg-secondary{% endif %}">
+                                {{ session.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ session.row_count }}</td>
+                        <td>{{ session.column_count }}</td>
+                        <td>{{ session.created_at|date:"Y-m-d H:i" }}</td>
+                        <td class="text-end">
+                            {% if session.status == "COMPLETED" %}
+                            <a class="btn btn-sm btn-outline-success" href="{% url 'results:detail' session.pk %}">Result</a>
+                            {% elif session.status == "PROCESSING" or session.status == "PENDING" %}
+                            <a class="btn btn-sm btn-outline-info" href="{% url 'results:processing' session.pk %}">Processing</a>
+                            {% else %}
+                            <a class="btn btn-sm btn-outline-primary" href="{% url 'uploads:detail' session.pk %}">Open</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4">
+            <p class="text-secondary mb-3">You have not uploaded any datasets yet.</p>
+            <a class="btn btn-primary" href="{% url 'uploads:create' %}">Upload your first CSV</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Security | {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Security</h1>
+                {% if LEGAL_LAST_UPDATED %}
+                <p class="text-secondary mb-4">Last updated: {{ LEGAL_LAST_UPDATED }}</p>
+                {% endif %}
+
+                <p class="mb-4">
+                    {{ SITE_NAME }} is designed to reduce risk when working with sensitive datasets. This page describes security practices and deployment expectations.
+                </p>
+
+                <h2 class="h5 mt-4">Access Controls</h2>
+                <ul class="mb-0">
+                    <li>Authentication is required to upload, process, view, or download results.</li>
+                    <li>Sessions are scoped to the creating user account.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Secure Downloads</h2>
+                <ul class="mb-0">
+                    <li>When supported by the storage backend, downloads use time-limited signed URLs.</li>
+                    <li>Signed URL lifetime is configurable by the deployment owner.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Data Minimization</h2>
+                <ul class="mb-0">
+                    <li>Default retention is limited (original uploads: {{ ORIGINAL_RETENTION_DAYS }} days; results: {{ RESULT_RETENTION_DAYS }} days).</li>
+                    <li>Users can delete sessions and associated files from the application.</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Operational Security</h2>
+                <ul class="mb-0">
+                    <li>Secrets are configured via environment variables.</li>
+                    <li>Storage access is expected to follow least-privilege (separate keys for read/write where possible).</li>
+                </ul>
+
+                <h2 class="h5 mt-4">Incident Reporting</h2>
+                <p class="mb-0">
+                    Report suspected vulnerabilities or incidents to <a href="mailto:{{ SITE_CONTACT_EMAIL }}">{{ SITE_CONTACT_EMAIL }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Privatedec{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Dashboard</h1>
+        <p class="text-secondary mb-0">Your account is ready for upload, processing, and results features.</p>
+    </div>
+    <span class="badge text-bg-success">Authenticated</span>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Account</h2>
+                <p class="text-secondary">Manage your identity and affiliation details.</p>
+                <a class="btn btn-outline-primary" href="{% url 'accounts:profile' %}">View Profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Uploads</h2>
+                <p class="text-secondary">Upload a CSV, inspect its schema, and save the session for later processing.</p>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-primary" href="{% url 'uploads:create' %}">Upload CSV</a>
+                    <a class="btn btn-outline-secondary" href="{% url 'uploads:list' %}">View Sessions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="h5">Processing</h2>
+                <p class="text-secondary">Celery and anonymization engine integration are scaffolded in configuration.</p>
+                <button class="btn btn-outline-secondary" disabled>Planned</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
