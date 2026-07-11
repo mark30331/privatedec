@@ -10,12 +10,14 @@ from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.generic import FormView, UpdateView, View
+import logging
 
 from apps.evidence.models import UsageEvent
 
 from .forms import UserProfileForm, UserRegistrationForm
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(FormView):
@@ -24,13 +26,28 @@ class RegisterView(FormView):
     success_url = reverse_lazy("accounts:login")
 
     def form_valid(self, form):
-        user = form.save()
-        UsageEvent.objects.create(user=user, event_type="USER_REGISTERED")
-        self._send_verification_email(user)
-        messages.success(
-            self.request,
-            "Registration successful. Check your email to activate your account.",
+        user = form.save(
+            email_verification_required=settings.EMAIL_VERIFICATION_REQUIRED,
         )
+        UsageEvent.objects.create(user=user, event_type="USER_REGISTERED")
+        if settings.EMAIL_VERIFICATION_REQUIRED:
+            if self._send_verification_email(user):
+                messages.success(
+                    self.request,
+                    "Registration successful. Check your email to activate your account.",
+                )
+            else:
+                user.is_active = True
+                user.save(update_fields=["is_active", "updated_at"])
+                messages.warning(
+                    self.request,
+                    "Registration succeeded, but email verification is temporarily unavailable. You can sign in now.",
+                )
+        else:
+            messages.success(
+                self.request,
+                "Registration successful. You can now sign in.",
+            )
         return super().form_valid(form)
 
     def _send_verification_email(self, user):
@@ -47,12 +64,17 @@ class RegisterView(FormView):
                 "site_name": "Privatedec",
             },
         )
-        send_mail(
-            subject="Verify your Privatedec account",
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-        )
+        try:
+            send_mail(
+                subject="Verify your Privatedec account",
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+            )
+        except Exception:
+            logger.exception("Failed to send verification email to %s", user.email)
+            return False
+        return True
 
 
 class VerifyEmailView(View):

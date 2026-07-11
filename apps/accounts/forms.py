@@ -36,11 +36,11 @@ class UserRegistrationForm(BootstrapMixin, forms.ModelForm):
             raise forms.ValidationError("The two password fields must match.")
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, commit=True, email_verification_required=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"].lower()
-        user.is_active = False
-        user.is_email_verified = False
+        user.is_active = not email_verification_required
+        user.is_email_verified = not email_verification_required
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()

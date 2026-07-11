@@ -10,6 +10,7 @@ env = environ.Env(
     CSRF_TRUSTED_ORIGINS=(list, []),
     EMAIL_PORT=(int, 587),
     EMAIL_USE_TLS=(bool, True),
+    EMAIL_VERIFICATION_REQUIRED=(bool, False),
     CELERY_TASK_ALWAYS_EAGER=(bool, False),
     CSV_MAX_UPLOAD_MB=(int, 50),
     SITE_NAME=(str, "Privatedec"),
@@ -117,13 +118,17 @@ LOGIN_REDIRECT_URL = "core:dashboard"
 LOGOUT_REDIRECT_URL = "core:home"
 LOGIN_URL = "accounts:login"
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.smtp.EmailBackend",
+)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@privatedec.local")
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_VERIFICATION_REQUIRED = env("EMAIL_VERIFICATION_REQUIRED")
 
 CSV_MAX_UPLOAD_MB = env("CSV_MAX_UPLOAD_MB")
 CSV_MAX_UPLOAD_BYTES = CSV_MAX_UPLOAD_MB * 1024 * 1024
