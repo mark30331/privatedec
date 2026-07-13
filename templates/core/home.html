@@ -4,34 +4,200 @@
 
 {% block content %}
 <section class="py-5">
-    <div class="row align-items-center g-4">
+    <div class="row align-items-center g-4 mb-5">
         <div class="col-lg-7">
-            <span class="badge text-bg-primary mb-3">Django MVP Foundation</span>
-            <h1 class="display-5 fw-semibold">Upload CSV files and prepare them for privacy-safe sharing.</h1>
+            <span class="badge text-bg-primary mb-3">Built for Healthcare Research and Responsible AI</span>
+            <h1 class="display-5 fw-semibold">Prepare sensitive structured datasets for lower-risk sharing and analysis.</h1>
             <p class="lead text-secondary">
-                Privatedec is a privacy-preserving workflow for dataset upload, anonymization,
-                async processing, and secure result delivery.
+                Privatedec helps research teams upload CSV data, apply privacy-preserving
+                transformations, and generate controlled outputs for downstream collaboration,
+                analytics, and AI workflows.
+            </p>
+            <p class="text-secondary mb-0">
+                Designed for privacy-aware data handling with secure delivery, retention-aware
+                workflows, and evidence-friendly reporting.
             </p>
             <div class="d-flex flex-wrap gap-2 mt-4">
                 {% if request.user.is_authenticated %}
                 <a class="btn btn-primary btn-lg" href="{% url 'core:dashboard' %}">Open Dashboard</a>
+                <a class="btn btn-outline-secondary btn-lg" href="{% url 'uploads:create' %}">Upload Dataset</a>
                 {% else %}
                 <a class="btn btn-primary btn-lg" href="{% url 'accounts:register' %}">Create Account</a>
                 <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:login' %}">Sign In</a>
                 {% endif %}
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'core:security' %}">Trust & Security</a>
             </div>
         </div>
         <div class="col-lg-5">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="h5">Planned MVP Features</h2>
+                    <h2 class="h5">Why teams use Privatedec</h2>
                     <ul class="mb-0 text-secondary">
-                        <li>Email-based authentication</li>
-                        <li>CSV validation and preview</li>
-                        <li>Cloudflare R2 storage</li>
-                        <li>Celery + Redis processing</li>
-                        <li>Secure download workflow</li>
+                        <li>Prepare structured datasets for safer research collaboration</li>
+                        <li>Configure quasi-identifiers, sensitive fields, and privacy targets</li>
+                        <li>Generate controlled outputs with downloadable reports</li>
+                        <li>Deliver results through authenticated access and signed downloads</li>
+                        <li>Support retention-aware handling and deletion workflows</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-primary fs-3 mb-3">
+                        <i class="bi bi-hospital"></i>
+                    </div>
+                    <h2 class="h5">Healthcare Research Workflows</h2>
+                    <p class="text-secondary mb-0">
+                        Support lower-risk data sharing for clinical research, internal analytics,
+                        and cross-team collaboration using structured CSV datasets.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-primary fs-3 mb-3">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h2 class="h5">Responsible AI Data Preparation</h2>
+                    <p class="text-secondary mb-0">
+                        Create privacy-aware inputs for downstream model development while keeping
+                        governance decisions visible and reproducible.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-primary fs-3 mb-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h2 class="h5">Governance and Control</h2>
+                    <p class="text-secondary mb-0">
+                        Pair anonymization workflows with signed result delivery, retention-aware
+                        handling, and policy pages that support trust and review.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4 p-lg-5">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-4">
+                    <h2 class="h3 mb-3">How it works</h2>
+                    <p class="text-secondary mb-0">
+                        Privatedec guides users from upload through governed output in a workflow
+                        designed for clarity, review, and controlled access.
+                    </p>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold mb-2">1. Upload and inspect</div>
+                                <p class="text-secondary small mb-0">
+                                    Validate CSV structure, preview data, and review detected columns
+                                    before starting processing.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold mb-2">2. Configure privacy controls</div>
+                                <p class="text-secondary small mb-0">
+                                    Select quasi-identifiers, sensitive fields, and privacy parameters
+                                    such as k-anonymity, l-diversity, and t-closeness.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold mb-2">3. Review and deliver results</div>
+                                <p class="text-secondary small mb-0">
+                                    Access reports, review outputs, and download processed files
+                                    through authenticated and controlled delivery workflows.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Built to support trust on first review</h2>
+                    <div class="row g-3 text-secondary">
+                        <div class="col-md-6">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold text-dark mb-2">Secure handling</div>
+                                <p class="small mb-0">
+                                    Authenticated access, controlled downloads, and clear session-based
+                                    workflow management.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold text-dark mb-2">Retention-aware operations</div>
+                                <p class="small mb-0">
+                                    Policy pages, deletion workflows, and retention settings help make
+                                    data handling expectations visible.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold text-dark mb-2">Evidence-friendly reporting</div>
+                                <p class="small mb-0">
+                                    Processing reports and session records make workflow decisions easier
+                                    to review and explain.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 h-100 p-3">
+                                <div class="fw-semibold text-dark mb-2">Healthcare and AI framing</div>
+                                <p class="small mb-0">
+                                    The platform is positioned for privacy-aware research collaboration
+                                    and responsible data preparation for analytics and model training.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-3">Important note</h2>
+                    <p class="text-secondary mb-3">
+                        Privatedec is intended for privacy-aware data preparation workflows. Users
+                        should only upload datasets they are authorized to use.
+                    </p>
+                    <p class="text-secondary mb-0">
+                        For demonstrations and testing, use synthetic or appropriately de-identified
+                        data rather than real patient information.
+                    </p>
                 </div>
             </div>
         </div>
