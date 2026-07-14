@@ -70,13 +70,15 @@
                 <div class="col-md-6 text-secondary small">
                     {{ SITE_NAME }} · <a class="text-decoration-none" href="{% url 'core:impact' %}">Impact</a>
                 </div>
-                <div class="col-md-6 text-md-end small">
-                    <a class="text-decoration-none me-3" href="{% url 'core:terms' %}">Terms</a>
-                    <a class="text-decoration-none me-3" href="{% url 'core:privacy' %}">Privacy</a>
-                    <a class="text-decoration-none me-3" href="{% url 'core:security' %}">Security</a>
-                    <a class="text-decoration-none me-3" href="{% url 'core:retention' %}">Retention</a>
-                    <a class="text-decoration-none me-3" href="{% url 'core:healthcare_disclaimer' %}">Healthcare</a>
-                    <a class="text-decoration-none" href="{% url 'core:ai_disclaimer' %}">AI</a>
+                <div class="col-md-6">
+                    <div class="d-flex flex-wrap justify-content-md-end gap-2">
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:terms' %}">Terms</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:privacy' %}">Privacy</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:security' %}">Security</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:retention' %}">Retention</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:healthcare_disclaimer' %}">Healthcare</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'core:ai_disclaimer' %}">AI</a>
+                    </div>
                 </div>
             </div>
         </div>

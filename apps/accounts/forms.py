@@ -13,8 +13,14 @@ class BootstrapMixin:
 
 
 class UserRegistrationForm(BootstrapMixin, forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    password2 = forms.CharField(
+        label="Confirm password",
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
 
     class Meta:
         model = User
@@ -33,7 +39,7 @@ class UserRegistrationForm(BootstrapMixin, forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         if cleaned_data.get("password1") != cleaned_data.get("password2"):
-            raise forms.ValidationError("The two password fields must match.")
+            raise forms.ValidationError("Password fields must match.")
         return cleaned_data
 
     def save(self, commit=True, email_verification_required=True):
