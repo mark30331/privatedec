@@ -50,7 +50,10 @@ This project is an actively developed deployed MVP focused on privacy-preserving
 <img width="1920" height="926" alt="Screenshot (108)" src="https://github.com/user-attachments/assets/7e0172ac-2796-4b04-addd-58d5c7bc0d17" />
 
 ### Upload Workflow
+<img width="1920" height="1021" alt="Screenshot (109)" src="https://github.com/user-attachments/assets/1bc6c5b2-3ce2-4d9a-b981-091c2ca30d54" />
+
 <img width="1920" height="850" alt="Screenshot (112)" src="https://github.com/user-attachments/assets/8b398317-1992-4c5c-90e1-33f578a4e3e6" />
 
 ### Results and Reporting
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a300baf8-0865-484c-8bfc-b3f58b28ff11" />
+<img width="1920" height="866" alt="Screenshot (111)" src="https://github.com/user-attachments/assets/7c7fc5dd-2eb8-4882-b240-9b7c089688aa" />
+
